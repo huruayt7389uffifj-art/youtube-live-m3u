@@ -1,25 +1,28 @@
-import os
+import subprocess
 
-# قائمة الأفلام والقنوات التي طلبتها
+# قائمة الأفلام والقنوات
 channels = [
-    ("فيلم كلب بلدي", "https://youtu.be/F_-IZrZ6wZM"),
-    ("فيلم لا تراجع ولا استسلام", "https://youtu.be/F_-IZrZ6wZM"),
-    ("فيلم معلش احنا بنتبهدل", "https://youtu.be/4PVzaqu5avY"),
-    ("beIN SPORTS HABER", "https://youtu.be/9xVXWLwT0vA")
+    ("فيلم كلب بلدي", "https://www.youtube.com/watch?v=F_-IZrZ6wZM"),
+    ("فيلم لا تراجع ولا استسلام", "https://www.youtube.com/watch?v=F_-IZrZ6wZM"),
+    ("فيلم معلش احنا بنتبهدل", "https://www.youtube.com/watch?v=4PVzaqu5avY"),
+    ("beIN SPORTS HABER", "https://www.youtube.com/watch?v=9xVXWLwT0vA")
 ]
+
+def get_url(youtube_url):
+    try:
+        # استخدام subprocess بدلاً من os.system لضمان جلب الرابط بدقة
+        result = subprocess.check_output(['yt-dlp', '-g', youtube_url], stderr=subprocess.STDOUT).decode('utf-8').strip()
+        return result
+    except:
+        return None
 
 with open("playlist.m3u", "w", encoding="utf-8") as f:
     f.write("#EXTM3U\n")
     for name, url in channels:
-        # السكريبت يستخدم yt-dlp لجلب الرابط المباشر لكل فيديو
-        print(f"جاري معالجة: {name}...")
-        os.system(f"yt-dlp -g {url} > temp_url.txt")
-        if os.path.exists("temp_url.txt"):
-            with open("temp_url.txt", "r") as t:
-                stream_url = t.read().strip()
-            if stream_url:
-                f.write(f'#EXTINF:-1, {name}\n{stream_url}\n')
-
-# حذف الملف المؤقت بعد الانتهاء
-if os.path.exists("temp_url.txt"):
-    os.remove("temp_url.txt")
+        print(f"Processing: {name}")
+        stream_url = get_url(url)
+        if stream_url:
+            f.write(f'#EXTINF:-1, {name}\n{stream_url}\n')
+            print(f"Success: {name}")
+        else:
+            print(f"Failed: {name}")
