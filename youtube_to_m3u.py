@@ -1,28 +1,59 @@
 import subprocess
 
-# قائمة الأفلام والقنوات
+import os
+
+
+
+# الروابط الجديدة التي أرسلتها (بث مباشر)
+
 channels = [
-    ("فيلم كلب بلدي", "https://www.youtube.com/watch?v=F_-IZrZ6wZM"),
-    ("فيلم لا تراجع ولا استسلام", "https://www.youtube.com/watch?v=F_-IZrZ6wZM"),
-    ("فيلم معلش احنا بنتبهدل", "https://www.youtube.com/watch?v=4PVzaqu5avY"),
-    ("beIN SPORTS HABER", "https://www.youtube.com/watch?v=9xVXWLwT0vA")
+
+    ("beIN SPORTS News", "https://www.youtube.com/live/2lJZPT6OljI?si=OCQVbDnpzT6sKoWy"),
+
+    ("beIN SPORTS Live", "https://www.youtube.com/live/kvfmomTgDkU?si=46wjd6i_bsE7w2pe"),
+
+    ("beIN SPORTS HABER", "https://www.youtube.com/live/9xVXWLwT0vA?si=R7pXYwsHu4HMg9fN")
+
 ]
 
+
+
 def get_url(youtube_url):
+
     try:
-        # استخدام subprocess بدلاً من os.system لضمان جلب الرابط بدقة
+
+        # استخدام yt-dlp لجلب الرابط المباشر
+
         result = subprocess.check_output(['yt-dlp', '-g', youtube_url], stderr=subprocess.STDOUT).decode('utf-8').strip()
+
         return result
-    except:
+
+    except Exception as e:
+
+        print(f"Error fetching {youtube_url}: {e}")
+
         return None
 
+
+
+# إنشاء ملف القائمة
+
 with open("playlist.m3u", "w", encoding="utf-8") as f:
+
     f.write("#EXTM3U\n")
+
     for name, url in channels:
-        print(f"Processing: {name}")
+
+        print(f"جاري معالجة: {name}")
+
         stream_url = get_url(url)
+
         if stream_url:
+
             f.write(f'#EXTINF:-1, {name}\n{stream_url}\n')
-            print(f"Success: {name}")
+
+            print(f"تم بنجاح: {name}")
+
         else:
-            print(f"Failed: {name}")
+
+            print(f"فشل جلب رابط: {name}")
