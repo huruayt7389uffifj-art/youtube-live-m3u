@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # لجلب كامل التاريخ وتجنب مشاكل الدمج
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -27,4 +29,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add playlist.m3u
           git commit -m "Auto-update playlist every 4 hours" || exit 0
-          git push
+          git pull --rebase origin main # دمج التغييرات البعيدة لتجنب خطأ الـ rejected
+          git push origin main
