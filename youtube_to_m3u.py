@@ -1,3 +1,5 @@
+import subprocess
+
 channels = [
     ("Tom and Jerry in NY", "rEKifG2XUZg"),
     ("Gumball", "W8a4yXFozs0"),
@@ -11,12 +13,28 @@ channels = [
     ("Bluey", "NeH-ENJt2n8")
 ]
 
+def get_url(v_id):
+    try:
+        url = f"https://www.youtube.com/watch?v={v_id}"
+        # أمر yt-dlp لجلب الرابط الخام مع تمويه المتصفح
+        cmd = [
+            'yt-dlp', 
+            '--quiet', 
+            '--no-warnings', 
+            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            '-g', 
+            url
+        ]
+        return subprocess.check_output(cmd).decode('utf-8').strip()
+    except:
+        return None
+
 with open("playlist.m3u", "w", encoding="utf-8") as f:
     f.write("#EXTM3U\n")
     for name, vid_id in channels:
-        # الرابط المباشر للبث الخام من يوتيوب
-        # هذا الرابط يعمل كمحول (Redirect) مباشر للبث
-        m3u8_url = f"https://www.youtube.com/api/v1/manifest/hls_variant/expire/1740000000/id/{vid_id}/source/yt_live_broadcast/master.m3u8"
-        f.write(f'#EXTINF:-1, {name}\n{m3u8_url}\n')
+        print(f"جاري استخراج: {name}")
+        stream_link = get_url(vid_id)
+        if stream_link:
+            f.write(f'#EXTINF:-1, {name}\n{stream_link}\n')
 
-print("Playlist generated successfully!")
+print("تم التحديث بنجاح.")
