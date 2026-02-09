@@ -14,9 +14,9 @@ channels = [
 with open("playlist.m3u", "w", encoding="utf-8") as f:
     f.write("#EXTM3U\n")
     for name, vid_id in channels:
-        # استخدام رابط البوابة المباشرة التي لا تتطلب جلب البيانات من السيرفر
-        # هذه البوابة تحول الفيديو إلى m3u8 عند التشغيل مباشرة
-        m3u8_link = f"https://ls-o.fun/live/{vid_id}/index.m3u8"
-        f.write(f'#EXTINF:-1, {name}\n{m3u8_link}\n')
+        # الرابط المباشر للبث الخام من يوتيوب
+        # هذا الرابط يعمل كمحول (Redirect) مباشر للبث
+        m3u8_url = f"https://www.youtube.com/api/v1/manifest/hls_variant/expire/1740000000/id/{vid_id}/source/yt_live_broadcast/master.m3u8"
+        f.write(f'#EXTINF:-1, {name}\n{m3u8_url}\n')
 
-print("All links generated successfully!")
+print("Playlist generated successfully!")
