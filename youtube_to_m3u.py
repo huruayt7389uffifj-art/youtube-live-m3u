@@ -1,5 +1,3 @@
-import subprocess
-
 channels = [
     ("Tom and Jerry in NY", "rEKifG2XUZg"),
     ("Gumball", "W8a4yXFozs0"),
@@ -13,22 +11,12 @@ channels = [
     ("Bluey", "NeH-ENJt2n8")
 ]
 
-def get_live_m3u8(video_id):
-    try:
-        url = f"https://www.youtube.com/watch?v={video_id}"
-        # جلب رابط الـ m3u8 الأصلي مباشرة من خوادم يوتيوب
-        cmd = ['yt-dlp', '--quiet', '--no-warnings', '-g', url]
-        result = subprocess.check_output(cmd).decode('utf-8').strip()
-        return result
-    except:
-        return None
-
 with open("playlist.m3u", "w", encoding="utf-8") as f:
     f.write("#EXTM3U\n")
     for name, vid_id in channels:
-        print(f"Fetching: {name}")
-        stream = get_live_m3u8(vid_id)
-        if stream:
-            f.write(f'#EXTINF:-1, {name}\n{stream}\n')
+        # استخدام رابط البوابة المباشرة التي لا تتطلب جلب البيانات من السيرفر
+        # هذه البوابة تحول الفيديو إلى m3u8 عند التشغيل مباشرة
+        m3u8_link = f"https://ls-o.fun/live/{vid_id}/index.m3u8"
+        f.write(f'#EXTINF:-1, {name}\n{m3u8_link}\n')
 
-print("Done! Check your playlist.m3u now.")
+print("All links generated successfully!")
