@@ -8,10 +8,7 @@ channels = [
     ("Adventure Time", "uZkaJ3e9nfY"),
     ("PAW Patrol", "P9pDG_quB9U"),
     ("Mr Bean World", "o-c7MuNavZY"),
-    ("Bluey", "NeH-ENJt2n8")و
-    ("beIN SPORTS News", "2lJZPT6OljI"),
-    ("beIN SPORTS Live", "kvfmomTgDkU"),
-    ("beIN SPORTS HABER", "9xVXWLwT0vA")
+    ("Bluey", "NeH-ENJt2n8")
 ]
 
 with open("playlist.m3u", "w", encoding="utf-8") as f:
