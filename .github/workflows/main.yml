@@ -1,8 +1,8 @@
 name: Update YouTube Playlist
 on:
   schedule:
-    - cron: '0 */4 * * *' # تم التعديل ليعمل كل 4 ساعات بالضبط
-  workflow_dispatch:      # لتمكين التشغيل اليدوي عند الحاجة
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python_version: '3.9'
+          python-version: '3.9' # تم التصحيح هنا من _ إلى -
 
       - name: Run script
         run: python youtube_to_m3u.py
@@ -28,3 +28,4 @@ jobs:
           git add playlist.m3u
           git commit -m "Auto-update playlist every 4 hours" || exit 0
           git push
+        
