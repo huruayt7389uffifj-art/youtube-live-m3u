@@ -1,3 +1,5 @@
+import subprocess
+
 channels = [
     ("Tom and Jerry in NY", "rEKifG2XUZg"),
     ("Gumball", "W8a4yXFozs0"),
@@ -11,15 +13,22 @@ channels = [
     ("Bluey", "NeH-ENJt2n8")
 ]
 
+def get_live_m3u8(video_id):
+    try:
+        url = f"https://www.youtube.com/watch?v={video_id}"
+        # جلب رابط الـ m3u8 الأصلي مباشرة من خوادم يوتيوب
+        cmd = ['yt-dlp', '--quiet', '--no-warnings', '-g', url]
+        result = subprocess.check_output(cmd).decode('utf-8').strip()
+        return result
+    except:
+        return None
+
 with open("playlist.m3u", "w", encoding="utf-8") as f:
     f.write("#EXTM3U\n")
     for name, vid_id in channels:
-        # استخدام بوابة Piping-Bot أو المترجمات البرمجية الأكثر استقراراً
-        m3u8_link = f"https://youtube.com/api/v1/manifest/hls_variant/expire/1700000000/id/{vid_id}/source/yt_live_broadcast/master.m3u8"
-        
-        # الحل الأضمن حالياً لتشغيل اليوتيوب بصيغة m3u8 على أي مشغل:
-        final_url = f"https://piped-proxy.kavin.rocks/live.m3u8?v={vid_id}"
-        
-        f.write(f'#EXTINF:-1, {name}\n{final_url}\n')
+        print(f"Fetching: {name}")
+        stream = get_live_m3u8(vid_id)
+        if stream:
+            f.write(f'#EXTINF:-1, {name}\n{stream}\n')
 
-print("تم توليد الروابط بنجاح!")
+print("Done! Check your playlist.m3u now.")
