@@ -16,7 +16,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9' # تم التصحيح هنا من _ إلى -
+          python-version: '3.9'
+
+      - name: Install yt-dlp
+        run: |
+          python -m pip install --upgrade pip
+          pip install yt-dlp
 
       - name: Run script
         run: python youtube_to_m3u.py
@@ -28,4 +33,3 @@ jobs:
           git add playlist.m3u
           git commit -m "Auto-update playlist every 4 hours" || exit 0
           git push
-        
