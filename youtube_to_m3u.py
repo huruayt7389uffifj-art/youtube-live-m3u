@@ -1,5 +1,3 @@
-import subprocess
-
 channels = [
     ("Tom and Jerry in NY", "rEKifG2XUZg"),
     ("Gumball", "W8a4yXFozs0"),
@@ -13,32 +11,12 @@ channels = [
     ("Bluey", "NeH-ENJt2n8")
 ]
 
-def get_url(v_id):
-    try:
-        url = f"https://www.youtube.com/watch?v={v_id}"
-        # إضافة إعدادات متقدمة لتخطي الحظر الجغرافي وحظر البوتات
-        cmd = [
-            'yt-dlp',
-            '--quiet',
-            '--no-warnings',
-            '--format', 'best',
-            '--extractor-args', 'youtube:player_client=android', # محاكاة تطبيق أندرويد لتجنب الحظر
-            '-g',
-            url
-        ]
-        return subprocess.check_output(cmd).decode('utf-8').strip()
-    except Exception as e:
-        return None
-
 with open("playlist.m3u", "w", encoding="utf-8") as f:
     f.write("#EXTM3U\n")
     for name, vid_id in channels:
-        print(f"Fetching: {name}")
-        stream_link = get_url(vid_id)
-        if stream_link:
-            f.write(f'#EXTINF:-1, {name}\n{stream_link}\n')
-        else:
-            # رابط احتياطي في حال فشل الاستخراج
-            f.write(f'#EXTINF:-1, {name} (Backup)\nhttps://www.youtube.com/watch?v={vid_id}\n')
+        # استخدام بوابة (Invidious) لتحويل الفيديو إلى m3u8 مباشرة
+        # هذه الروابط لا تتطلب ملفات تعريف ارتباط (Cookies) وتعمل عالمياً
+        m3u8_link = f"https://invidious.asir.dev/latest_version?id={vid_id}&itag=96"
+        f.write(f'#EXTINF:-1, {name}\n{m3u8_link}\n')
 
-print("Done!")
+print("تم إنشاء القائمة بنجاح وبدون أخطاء!")
