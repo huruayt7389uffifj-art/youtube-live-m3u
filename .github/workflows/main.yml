@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -29,5 +27,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add playlist.m3u
           git commit -m "Auto-update playlist every 4 hours" || exit 0
-          git pull --rebase origin main
-          git push origin main
+          git push --force origin main # استخدام القوة لإنهاء مشكلة التضارب تماماً
